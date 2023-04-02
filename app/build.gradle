@@ -28,6 +28,19 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    task assembleDebug(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.example.Application'
+    jvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005']
+}
+
+task assemble(type: Zip) {
+    from sourceSets.main.output
+    archiveFileName = "app.zip"
+    destinationDir = file("$buildDir/dist")
+    dependsOn assembleDebug
+}
     
     task generateApk(type: com.android.build.gradle.tasks.PackageApplication) {
     outputDirectory = new File(project.rootDir, "apk")
